@@ -9,8 +9,28 @@ function RegisterForm() {
   const [FechaNacimiento, setFechaNacimiento] = useState('');
   const [Rol, setRol] = useState('');
   const [errores, setErrores] = useState({});
+  const [adminExists, setAdminExists] = useState(false);
 
-  // Validaciones similares al primer ejemplo pero manteniendo la estructura y nombres de variables del segundo
+  // Chequear si ya existe un administrador al cargar el componente
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        // Cambia la URL si tu endpoint es diferente
+        const response = await fetch("https://localhost:7143/api/Personas/Admin-Exists");
+        if (response.ok) {
+          const data = await response.json();
+          setAdminExists(data.existe); // espera que el backend retorne { existe: true/false }
+        } else {
+          setAdminExists(false);
+        }
+      } catch {
+        setAdminExists(false);
+      }
+    };
+    checkAdmin();
+  }, []);
+
+  // Validaciones
   useEffect(() => {
     const err = {};
 
@@ -52,6 +72,16 @@ function RegisterForm() {
       return;
     }
 
+    // Prevenir que un segundo admin se registre por manipulación del frontend
+    if (Rol.toLowerCase() === "administrador" && adminExists) {
+      Swal.fire({
+        icon: "error",
+        title: "Ya existe un administrador",
+        text: "Solo se permite un registro de administrador.",
+      });
+      return;
+    }
+
     try {
       const response = await fetch("https://localhost:7143/api/Personas/Register", {
         method: "POST",
@@ -67,6 +97,10 @@ function RegisterForm() {
           title: "Oops...",
           text: mensaje,
         });
+        // Si el backend responde que ya existe un admin, actualizar estado para reflejarlo en el frontend
+        if (mensaje.toLowerCase().includes("administrador")) {
+          setAdminExists(true);
+        }
       } else {
         Swal.fire({
           title: mensaje || 'Registro exitoso',
@@ -78,6 +112,10 @@ function RegisterForm() {
         setContraseña('');
         setFechaNacimiento('');
         setRol('');
+        // Si se registró el primer admin, actualizar el estado
+        if (Rol.toLowerCase() === "administrador") {
+          setAdminExists(true);
+        }
       }
     } catch (error) {
       console.log("Error al registrar: " + error);
@@ -166,7 +204,9 @@ function RegisterForm() {
             required
           >
             <option value="">Selecciona un Rol</option>
-            <option value="administrador">Administrador</option>
+            <option value="administrador" disabled={adminExists}>
+              Administrador{adminExists ? " (ya existe uno)" : ""}
+            </option>
             <option value="cliente">Cliente</option>
           </select>
           {errores.Rol && <span className="text-danger">{errores.Rol}</span>}
