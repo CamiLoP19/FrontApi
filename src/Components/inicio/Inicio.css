@@ -1,0 +1,90 @@
+:root {
+  --bs-primary: #1E90FF;  
+  --bs-danger: #FF2E63;    
+  --bs-warning: #FFD700; 
+  --bs-light: #F8F9FA;     
+  --bs-dark: #212529;      
+  --bs-mint: #20C997;    
+  --bs-gray-dark: #6C757D; 
+}
+
+body {
+  transition: background-color 0.5s ease, background-image 0.8s ease-in-out;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+/* Fondos por categoría */
+body[data-categoria-visible="concierto"] {
+  background-image: url(../imagenes/FondoConcierto.png);
+}
+
+body[data-categoria-visible="cine"] {
+  background-image: url(../imagenes/FondoCine.png);
+}
+
+body[data-categoria-visible="deporte"] {
+  background-image: url(../imagenes/FondoDeporte.png);
+}
+
+body[data-categoria-visible="teatro"] {
+  background-image: url(../imagenes/FondoTeatro.png);
+}
+
+body[data-categoria-visible="otro"] {
+  background-image: url(../imagenes/FondoOtros.png);
+}
+
+/* Tarjetas */
+.card {
+  border: none;
+  background-color: #ffffff;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.02);
+}
+
+.card-title {
+  color: var(--bs-dark);
+  font-weight: bold;
+}
+
+.card-text {
+  color: var(--bs-dark);
+}
+
+/* Modal */
+.modal-content {
+  background-color: #ffffff;
+  color: var(--bs-dark);
+}
+
+.modal-header,
+.modal-footer {
+  border-color: var(--bs-primary);
+}
+
+/* Botones */
+.btn-primary {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+
+.btn-primary:hover {
+  background-color: #187bcd;
+  border-color: #187bcd;
+}
+
+.btn-secondary {
+  background-color: var(--bs-dark);
+  border-color: var(--bs-dark);
+}
+
+.btn-secondary:hover {
+  background-color: #000;
+  border-color: #000;
+}

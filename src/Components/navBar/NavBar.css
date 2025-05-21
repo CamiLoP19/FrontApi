@@ -1,0 +1,76 @@
+/* src/components/Navbar.css */
+
+/* Paleta de colores */
+:root {
+  --primary-color: #1E90FF;    
+  --action-color: #FF2E63;    
+  --background-color: #F8F9FA;  
+  --text-color: #F8F9FA;        
+  --dark-bg: #0D1B2A;           
+  --highlight-color: #FFD700;   
+}
+
+/* Navbar general */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--dark-bg);
+  padding: 1rem 2rem;
+  color: var(--text-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Marca */
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--highlight-color);
+  text-decoration: none;
+}
+
+
+.navbar-buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  color: var(--text-color);
+}
+
+
+.btn.info {
+  background-color: transparent;
+  border: 2px solid var(--text-color);
+}
+
+.btn.info:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+.btn.login {
+  background-color: var(--action-color);
+}
+
+.btn.login:hover {
+  background-color: #e02657;
+}
+
+
+.btn.register {
+  background-color: var(--text-color);
+  color: var(--dark-bg);
+}
+
+.btn.register:hover {
+  background-color: #e6e6e6;
+}
