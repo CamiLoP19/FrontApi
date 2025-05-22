@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "nombre": "Festival Rock Bogotá",
+    "categoria": "Conciertos",
+    "fecha": "2024-07-15",
+    "hora": "19:00",
+    "ciudad": "Bogotá",
+    "imagen": "imagenes/concierto.jpg",
+    "precio": 120
+  },
+  {
+    "id": 2,
+    "nombre": "Partido Nacional vs Millonarios",
+    "categoria": "Deporte",
+    "fecha": "2024-08-10",
+    "hora": "16:30",
+    "ciudad": "Medellín",
+    "imagen": "imagenes/deporte.jpg",
+    "precio": 90
+  },
+  {
+    "id": 3,
+    "nombre": "Obra Hamlet",
+    "categoria": "Teatro",
+    "fecha": "2024-09-05",
+    "hora": "20:00",
+    "ciudad": "Cali",
+    "imagen": "imagenes/teatro.jpg",
+    "precio": 70
+  },
+  {
+    "id": 4,
+    "nombre": "Feria Gastronómica",
+    "categoria": "Otro",
+    "fecha": "2024-06-22",
+    "hora": "12:00",
+    "ciudad": "Barranquilla",
+    "imagen": "imagenes/otro.jpg",
+    "precio": 50
+  },
+  {
+    "id": 5,
+    "nombre": "Concierto Salsa al Parque",
+    "categoria": "Conciertos",
+    "fecha": "2024-07-28",
+    "hora": "18:00",
+    "ciudad": "Bogotá",
+    "imagen": "imagenes/concierto.jpg",
+    "precio": 110
+  },
+  {
+    "id": 6,
+    "nombre": "Carrera 10K Medellín",
+    "categoria": "Deporte",
+    "fecha": "2024-08-20",
+    "hora": "07:00",
+    "ciudad": "Medellín",
+    "imagen": "imagenes/deporte.jpg",
+    "precio": 60
+  },
+  {
+    "id": 7,
+    "nombre": "Teatro La Casa de Bernarda Alba",
+    "categoria": "Teatro",
+    "fecha": "2024-09-12",
+    "hora": "19:30",
+    "ciudad": "Cartagena",
+    "imagen": "imagenes/teatro.jpg",
+    "precio": 80
+  },
+  {
+    "id": 8,
+    "nombre": "Expo Emprendedores",
+    "categoria": "Otro",
+    "fecha": "2024-06-30",
+    "hora": "10:00",
+    "ciudad": "Bucaramanga",
+    "imagen": "imagenes/otro.jpg",
+    "precio": 40
+  },
+  {
+    "id": 9,
+    "nombre": "Concierto Pop Medellín",
+    "categoria": "Conciertos",
+    "fecha": "2024-07-20",
+    "hora": "21:00",
+    "ciudad": "Medellín",
+    "imagen": "imagenes/concierto.jpg",
+    "precio": 130
+  },
+  {
+    "id": 10,
+    "nombre": "Final Copa Colombia",
+    "categoria": "Deporte",
+    "fecha": "2024-08-25",
+    "hora": "18:00",
+    "ciudad": "Cali",
+    "imagen": "imagenes/deporte.jpg",
+    "precio": 150
+  },
+  {
+    "id": 11,
+    "nombre": "Teatro El Principito",
+    "categoria": "Teatro",
+    "fecha": "2024-09-18",
+    "hora": "17:00",
+    "ciudad": "Bogotá",
+    "imagen": "imagenes/teatro.jpg",
+    "precio": 60
+  },
+  {
+    "id": 12,
+    "nombre": "Feria del Libro",
+    "categoria": "Otro",
+    "fecha": "2024-06-18",
+    "hora": "09:00",
+    "ciudad": "Pereira",
+    "imagen": "imagenes/otro.jpg",
+    "precio": 30
+  },
+  {
+    "id": 13,
+    "nombre": "Concierto Jazz en el Parque",
+    "categoria": "Conciertos",
+    "fecha": "2024-07-22",
+    "hora": "20:00",
+    "ciudad": "Cali",
+    "imagen": "imagenes/concierto.jpg",
+    "precio": 140
+  },
+  {
+    "id": 14,
+    "nombre": "Maratón Cartagena",
+    "categoria": "Deporte",
+    "fecha": "2024-08-15",
+    "hora": "06:00",
+    "ciudad": "Cartagena",
+    "imagen": "imagenes/deporte.jpg",
+    "precio": 100
+  },
+  {
+    "id": 15,
+    "nombre": "Festival de Comedia",
+    "categoria": "Otro",
+    "fecha": "2024-09-25",
+    "hora": "21:00",
+    "ciudad": "Bogotá",
+    "imagen": "imagenes/otro.jpg",
+    "precio": 75
+  },
+  {
+    "id": 16,
+    "nombre": "Cine al Parque: Inception",
+    "categoria": "Cine",
+    "fecha": "2024-07-10",
+    "hora": "20:00",
+    "ciudad": "Bogotá",
+    "imagen": "imagenes/cine.jpg",
+    "precio": 35
+  },
+  {
+    "id": 17,
+    "nombre": "Cine Retro: Volver al Futuro",
+    "categoria": "Cine",
+    "fecha": "2024-08-05",
+    "hora": "19:00",
+    "ciudad": "Medellín",
+    "imagen": "imagenes/cine.jpg",
+    "precio": 30
+  },
+  {
+    "id": 18,
+    "nombre": "Cine Infantil: Toy Story",
+    "categoria": "Cine",
+    "fecha": "2024-09-02",
+    "hora": "16:00",
+    "ciudad": "Cali",
+    "imagen": "imagenes/cine.jpg",
+    "precio": 25
+  },
+  {
+    "id": 19,
+    "nombre": "Concierto Sinfónico Medellín",
+    "categoria": "Conciertos",
+    "fecha": "2024-08-12",
+    "hora": "19:30",
+    "ciudad": "Medellín",
+    "imagen": "imagenes/concierto.jpg",
+    "precio": 150
+  },
+  {
+    "id": 20,
+    "nombre": "Copa América Femenina",
+    "categoria": "Deporte",
+    "fecha": "2024-07-30",
+    "hora": "17:00",
+    "ciudad": "Barranquilla",
+    "imagen": "imagenes/deporte.jpg",
+    "precio": 80
+  },
+  {
+    "id": 21,
+    "nombre": "Obra: La Dama de Negro",
+    "categoria": "Teatro",
+    "fecha": "2024-08-18",
+    "hora": "20:00",
+    "ciudad": "Bogotá",
+    "imagen": "imagenes/teatro.jpg",
+    "precio": 90
+  },
+  {
+    "id": 22,
+    "nombre": "Feria de Tecnología",
+    "categoria": "Otro",
+    "fecha": "2024-09-10",
+    "hora": "10:00",
+    "ciudad": "Medellín",
+    "imagen": "imagenes/otro.jpg",
+    "precio": 60
+  },
+  {
+    "id": 23,
+    "nombre": "Cine de Autor: Parásitos",
+    "categoria": "Cine",
+    "fecha": "2024-08-22",
+    "hora": "18:00",
+    "ciudad": "Bogotá",
+    "imagen": "imagenes/cine.jpg",
+    "precio": 40
+  },
+  {
+    "id": 24,
+    "nombre": "Concierto Electrónico",
+    "categoria": "Conciertos",
+    "fecha": "2024-09-05",
+    "hora": "22:00",
+    "ciudad": "Cartagena",
+    "imagen": "imagenes/concierto.jpg",
+    "precio": 160
+  },
+  {
+    "id": 25,
+    "nombre": "Torneo Nacional de Ajedrez",
+    "categoria": "Deporte",
+    "fecha": "2024-09-15",
+    "hora": "09:00",
+    "ciudad": "Cali",
+    "imagen": "imagenes/deporte.jpg",
+    "precio": 45
+  },
+  {
+    "id": 26,
+    "nombre": "Obra: Romeo y Julieta",
+    "categoria": "Teatro",
+    "fecha": "2024-07-29",
+    "hora": "19:00",
+    "ciudad": "Bucaramanga",
+    "imagen": "imagenes/teatro.jpg",
+    "precio": 85
+  },
+  {
+    "id": 27,
+    "nombre": "Feria de Mascotas",
+    "categoria": "Otro",
+    "fecha": "2024-08-28",
+    "hora": "11:00",
+    "ciudad": "Cali",
+    "imagen": "imagenes/otro.jpg",
+    "precio": 20
+  },
+  {
+    "id": 28,
+    "nombre": "Cine Documental: Planeta Tierra",
+    "categoria": "Cine",
+    "fecha": "2024-09-20",
+    "hora": "17:00",
+    "ciudad": "Pereira",
+    "imagen": "imagenes/cine.jpg",
+    "precio": 28
+  },
+  {
+    "id": 29,
+    "nombre": "Concierto Música Andina",
+    "categoria": "Conciertos",
+    "fecha": "2024-08-18",
+    "hora": "18:00",
+    "ciudad": "Bogotá",
+    "imagen": "imagenes/concierto.jpg",
+    "precio": 100
+  },
+  {
+    "id": 30,
+    "nombre": "Rally Urbano",
+    "categoria": "Deporte",
+    "fecha": "2024-09-22",
+    "hora": "08:00",
+    "ciudad": "Bucaramanga",
+    "imagen": "imagenes/deporte.jpg",
+    "precio": 55
+  }
+]

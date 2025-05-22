@@ -1,16 +1,16 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import React from 'react';
-import LoginForm from './Components/loginForm/LoginForm';
-import RegisterForm from './Components/registerForm/RegisterForm';
-import Contact from './Components/contact/Contact';
-import PostsPage from './Components/postPage/PostsPage';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Inicio from './Components/inicio/Inicio';
-import Comprar from './Components/comprar/Comprar';
-import Navbar from './Components/navBar/Nav-bar';
-import Footer from './Components/footer/Footer';
-import CreacionEventos from './Pages/CreacionEventos';
-
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React from "react";
+import LoginForm from "./Components/loginForm/LoginForm";
+import RegisterForm from "./Components/registerForm/RegisterForm";
+import Contact from "./Components/contact/Contact";
+import PostsPage from "./Components/postPage/PostsPage";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Inicio from "./Components/inicio/Inicio";
+import Comprar from "./Components/comprar/Comprar";
+import Navbar from "./Components/navBar/Nav-bar";
+import Footer from "./Components/footer/Footer";
+import CreacionEventos from "./Pages/CreacionEventos";
+import AdministrarEventos from "./Pages/AdministrarEventos";
 function App() {
   return (
     <Router>
@@ -27,11 +27,13 @@ function App() {
         <Route path="/registro" element={<RegisterForm />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/CreacionEventos" element={<CreacionEventos />} />
-        
-        
+        <Route path="/Administrar" element={<AdministrarEventos />} />
       </Routes>
-      <Footer /> 
+      <Footer />
     </Router>
   );
 }
 export default App;
+/*
+
+*/

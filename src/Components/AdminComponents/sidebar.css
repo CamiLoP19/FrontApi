@@ -1,0 +1,53 @@
+/* sidebar.css */
+.sidebar-custom {
+  background: linear-gradient(135deg, #232526 0%, #414345 100%);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  transition: width 0.3s;
+}
+
+.sidebar-custom .nav-link {
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-size: 1.08rem;
+  padding: 10px 16px;
+  white-space: nowrap;
+}
+
+.sidebar-custom .nav-link:hover,
+.sidebar-custom .nav-link.active {
+  background: #343a40;
+  color: #00e6d0 !important;
+  transform: translateX(8px) scale(1.04);
+}
+
+.sidebar-custom .sidebar-icon {
+  transition: transform 0.3s, color 0.2s;
+  font-size: 1.3rem;
+}
+
+.sidebar-custom .nav-link:hover .sidebar-icon {
+  color: #00e6d0;
+  transform: rotate(-12deg) scale(1.2);
+}
+
+.sidebar-custom .sidebar-title {
+  letter-spacing: 1px;
+  color: #00e6d0;
+  text-shadow: 0 2px 8px #0002;
+}
+
+.toggle-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.3rem;
+  outline: none;
+  box-shadow: none;
+}
+
+.sidebar-closed .sidebar-title,
+.sidebar-closed hr,
+.sidebar-closed .nav-link span {
+  display: none !important;
+}
