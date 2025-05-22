@@ -1,0 +1,17 @@
+/* Puedes poner esto en tu archivo CSS global o en el de Editar */
+.card-img-fixed {
+  height: 180px;
+  object-fit: cover;
+}
+
+.card-body-flex {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card-actions-bottom {
+  margin-top: auto;
+  display: flex;
+  gap: 8px;
+}
