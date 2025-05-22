@@ -9,6 +9,7 @@ import Inicio from './Components/inicio/Inicio';
 import Comprar from './Components/comprar/Comprar';
 import Navbar from './Components/navBar/Nav-bar';
 import Footer from './Components/footer/Footer';
+import CreacionEventos from './Pages/CreacionEventos';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Navbar />
       <Routes>
         {/* Ruta para la página principal, que será PostsPage */}
+        <Route path="/" element={<Inicio />} />
         <Route path="/postspage" element={<PostsPage />} />
         <Route path="/Inicio" element={<Inicio />} />
         <Route path="/comprar" element={<Comprar />} />
@@ -24,10 +26,12 @@ function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/registro" element={<RegisterForm />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/CreacionEventos" element={<CreacionEventos />} />
+        
+        
       </Routes>
       <Footer /> 
     </Router>
   );
 }
-
 export default App;

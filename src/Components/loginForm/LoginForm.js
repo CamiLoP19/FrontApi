@@ -5,6 +5,7 @@ import './LoginForm.css';
 function LoginForm() {
   const [NombreUsuario, setNombreUsuario] = useState("");
   const [Contraseña, setContraseña] = useState("");
+  const[Rol, setRol] = useState("");  
   const [errores, setErrores] = useState({});
 
   useEffect(() => {
@@ -39,17 +40,21 @@ function LoginForm() {
 
       if (response.ok) {
         const data = await response.json();
+
+        // Guardar token y datos del usuario en localStorage
         localStorage.setItem("token", data.token);
         localStorage.setItem("nombreUsuario", data.user.nombreUsuario);
         localStorage.setItem("correo", data.user.correo);
+        localStorage.setItem("rol", data.user.rol);
 
         Swal.fire({
           title: "Inicio de sesión exitoso",
           icon: "success"
         });
-      window.location.href = "/Inicio"; // Redirigir a la página de inicio
-        // Redirigir si lo deseas según el usuario
-        // window.location.href = "/home";
+  alert("Rol recibido: " + data.user.rol);
+
+
+        window.location.href = "/Inicio"; // Redirigir a la página de inicio
       } else {
         const error = await response.text();
         Swal.fire({
@@ -101,10 +106,17 @@ function LoginForm() {
         </div>
 
         <button type="submit" className="btn btn-primary w-100">Ingresar</button>
+        <div className="mt-3 text-center">
+          <p className="mb-0">
+            ¿No tienes cuenta?{' '}
+            <a href="/registro" className="text-decoration-none">Regístrate</a>
+          </p>
+        </div>
       </form>
     </div>
   );
 }
 
 export default LoginForm;
+
 

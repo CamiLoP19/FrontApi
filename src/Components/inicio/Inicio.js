@@ -17,6 +17,25 @@ export default function Inicio() {
   const [image, setImage] = useState(null);
   const seccionRefs = useRef({});
 
+  // NUEVO: Leer eventos de localStorage
+  const [eventosLocales, setEventosLocales] = useState([]);
+
+  useEffect(() => {
+    const guardados = JSON.parse(localStorage.getItem('eventos') || '[]');
+    setEventosLocales(guardados);
+  }, []);
+
+  // Adaptar eventos locales al formato visual
+  const eventosLocalesAdaptados = eventosLocales.map(e => ({
+    imagen: e.imagenUrl || e.imagen || imgotro, // Usa url de imagen o un placeholder
+    titulo: e.nombre,
+    lugar: e.lugar,
+    fecha: e.fecha,
+    descripcion: e.descripcion,
+    categoria: (e.categoria || 'otro').toLowerCase()
+  }));
+
+  // Eventos hardcodeados
   const eventosData = {
     concierto: [
       {
@@ -65,6 +84,14 @@ export default function Inicio() {
     ]
   };
 
+  // Fusiona eventos locales con los hardcodeados
+  const eventosCompletos = { ...eventosData };
+  for (const evento of eventosLocalesAdaptados) {
+    const cat = evento.categoria;
+    if (!eventosCompletos[cat]) eventosCompletos[cat] = [];
+    eventosCompletos[cat].unshift(evento);
+  }
+
   const categorias = [
     { key: 'todos', label: 'Todos' },
     { key: 'deporte', label: '🏀 Deporte' },
@@ -75,6 +102,8 @@ export default function Inicio() {
   ];
 
   const convertirFechaISO = (fechaTexto) => {
+    // Si la fecha es del backend (formato yyyy-mm-dd), retorna igual
+    if (/^\d{4}-\d{2}-\d{2}/.test(fechaTexto)) return fechaTexto;
     const match = fechaTexto.match(/^(\d{1,2}) de (\w+)/);
     if (!match) return '';
     const dia = match[1].padStart(2, '0');
@@ -156,7 +185,7 @@ export default function Inicio() {
           </div>
         </div>
 
-        {Object.entries(eventosData).map(([cat, eventos]) => {
+        {Object.entries(eventosCompletos).map(([cat, eventos]) => {
           if (categoriaActiva !== 'todos' && categoriaActiva !== cat) return null;
 
           const eventosFiltrados = eventos.filter(e => {
