@@ -33,9 +33,9 @@ export default function Footer() {
           {/* Columna 3 */}
           <div className="footer-col">
             <h5>TICKET FAST SAS</h5>
-            <p>NIT. 900.569.193-0</p>
-            <p>Calle 99 10-19 Oficina 701</p>
-            <p>Bogotá</p>
+            <p>NIT. 01000010-01011000</p>
+            <p>Calle 18 No. 32 - 24</p>
+            <p>Valledupar</p>
           </div>
 
           {/* Columna 4 */}
