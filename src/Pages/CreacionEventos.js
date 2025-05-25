@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import Sidebar from "../Components/AdminComponents/SideBar";
 
-const categorias = ["Concierto", "Cine", "Deporte", "Teatro"];
-
 export default function CrearEvento() {
+  const [categorias, setCategorias] = useState([]);
   const [form, setForm] = useState({
     nombre: "",
     fecha: "",
     lugar: "",
     aforo: "",
-    categoria: "",
+    categoria: "", // aquí irá el ID de categoría
     descripcion: "",
     imagenFile: null,
     estado: true,
@@ -18,6 +17,22 @@ export default function CrearEvento() {
 
   const [errores, setErrores] = useState({});
   const [imagenPreview, setImagenPreview] = useState(null);
+
+  useEffect(() => {
+    // Cargar categorías desde el backend
+    const fetchCategorias = async () => {
+      try {
+        const res = await fetch("https://localhost:7143/api/CategoriaEventoes");
+        const data = await res.json();
+        setCategorias(data);
+      } catch (error) {
+        console.error("Error cargando categorías", error);
+        Swal.fire("Error", "No se pudieron cargar las categorías.", "error");
+      }
+    };
+
+    fetchCategorias();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
@@ -59,34 +74,60 @@ export default function CrearEvento() {
       return;
     }
 
-    // Guardar evento en localStorage (lista de eventos)
-    const eventosGuardados = JSON.parse(localStorage.getItem("eventos")) || [];
-    eventosGuardados.push({ ...form, imagenPreview });
-    localStorage.setItem("eventos", JSON.stringify(eventosGuardados));
+    const formData = new FormData();
+    formData.append("NombreEvento", form.nombre);
+    formData.append("FechaEvento", form.fecha);
+    formData.append("LugarEvento", form.lugar);
+    formData.append("Aforo", form.aforo);
+    formData.append("CategoriaEventoId", form.categoria); 
+    formData.append("DescripcionEvento", form.descripcion);
+    formData.append("Imagen", form.imagenFile);
+    formData.append("EstadoEventoActivo", form.estado);
 
-    Swal.fire({
-      icon: "success",
-      title: "Evento creado",
-      text: "El evento se ha creado correctamente.",
-    });
+    try {
+      const response = await fetch("https://localhost:7143/api/Eventoes", {
+        method: "POST",
+        body: formData,
+      });
 
-    setForm({
-      nombre: "",
-      fecha: "",
-      lugar: "",
-      aforo: "",
-      categoria: "",
-      descripcion: "",
-      imagenFile: null,
-      estado: true,
-    });
-    setImagenPreview(null);
-    setErrores({});
+      if (!response.ok) throw new Error("Error al guardar el evento");
+
+      // Opcional: guardar también en localStorage
+      const eventosGuardados = JSON.parse(localStorage.getItem("eventos")) || [];
+      eventosGuardados.push({ ...form, imagenPreview });
+      localStorage.setItem("eventos", JSON.stringify(eventosGuardados));
+
+      Swal.fire({
+        icon: "success",
+        title: "Evento creado",
+        text: "El evento se ha creado correctamente.",
+      });
+
+      setForm({
+        nombre: "",
+        fecha: "",
+        lugar: "",
+        aforo: "",
+        categoria: "",
+        descripcion: "",
+        imagenFile: null,
+        estado: true,
+      });
+      setImagenPreview(null);
+      setErrores({});
+    } catch (error) {
+      console.error("Error creando evento:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error al crear evento",
+        text: error.message,
+      });
+    }
   };
 
   return (
     <div className="container mt-5">
-      <Sidebar></Sidebar>
+      <Sidebar />
 
       <form
         onSubmit={handleSubmit}
@@ -162,8 +203,8 @@ export default function CrearEvento() {
           >
             <option value="">Selecciona una categoría</option>
             {categorias.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
+              <option key={cat.id} value={cat.id}>
+                {cat.nombre}
               </option>
             ))}
           </select>

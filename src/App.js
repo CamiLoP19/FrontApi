@@ -11,6 +11,8 @@ import Navbar from "./Components/navBar/Nav-bar";
 import Footer from "./Components/footer/Footer";
 import CreacionEventos from "./Pages/CreacionEventos";
 import AdministrarEventos from "./Pages/AdministrarEventos";
+import CrearCategoria  from "./Pages/CrearCategoria"; 
+
 function App() {
   return (
     <Router>
@@ -27,6 +29,7 @@ function App() {
         <Route path="/registro" element={<RegisterForm />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/CreacionEventos" element={<CreacionEventos />} />
+        <Route path="/CrearCategoria" element={<CrearCategoria/>} />
         <Route path="/Administrar" element={<AdministrarEventos />} />
       </Routes>
       <Footer />
