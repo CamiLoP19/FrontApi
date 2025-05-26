@@ -3,23 +3,18 @@ import Swal from "sweetalert2";
 import Sidebar from "../Components/AdminComponents/SideBar";
 
 export default function CrearEvento() {
+  const [nombreEvento, setNombreEvento] = useState("");
+  const [fechaEvento, setFechaEvento] = useState("");
+  const [lugarEvento, setLugarEvento] = useState("");
+  const [aforo, setAforo] = useState("");
+  const [descripcionEvento, setDescripcionEvento] = useState("");
+  const [estadoEventoActivo, setEstadoEventoActivo] = useState(true);
   const [categorias, setCategorias] = useState([]);
-  const [form, setForm] = useState({
-    nombre: "",
-    fecha: "",
-    lugar: "",
-    aforo: "",
-    categoria: "", // aquí irá el ID de categoría
-    descripcion: "",
-    imagenFile: null,
-    estado: true,
-  });
-
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
   const [errores, setErrores] = useState({});
-  const [imagenPreview, setImagenPreview] = useState(null);
+  const rol = localStorage.getItem("rol"); 
 
   useEffect(() => {
-    // Cargar categorías desde el backend
     const fetchCategorias = async () => {
       try {
         const res = await fetch("https://localhost:7143/api/CategoriaEventoes");
@@ -30,105 +25,96 @@ export default function CrearEvento() {
         Swal.fire("Error", "No se pudieron cargar las categorías.", "error");
       }
     };
-
     fetchCategorias();
   }, []);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked, files } = e.target;
-    if (type === "file") {
-      const file = files[0];
-      setForm((prev) => ({ ...prev, imagenFile: file }));
-      setImagenPreview(URL.createObjectURL(file));
-    } else {
-      setForm((prev) => ({
-        ...prev,
-        [name]: type === "checkbox" ? checked : value,
-      }));
-    }
-  };
-
   const validar = () => {
     const err = {};
-    if (!form.nombre) err.nombre = "El nombre es obligatorio";
-    if (!form.fecha) err.fecha = "La fecha es obligatoria";
-    if (!form.lugar) err.lugar = "El lugar es obligatorio";
-    if (!form.aforo || isNaN(form.aforo) || form.aforo <= 0)
+    if (!nombreEvento) err.nombre = "El nombre es obligatorio";
+    if (!fechaEvento) err.fecha = "La fecha es obligatoria";
+    if (!lugarEvento) err.lugar = "El lugar es obligatorio";
+    if (!aforo || isNaN(aforo) || aforo <= 0)
       err.aforo = "Aforo debe ser un número mayor a 0";
-    if (!form.categoria) err.categoria = "Selecciona una categoría";
-    if (!form.descripcion) err.descripcion = "La descripción es obligatoria";
-    if (!form.imagenFile) err.imagenFile = "La imagen es obligatoria";
+    if (!categoriaSeleccionada) err.categoria = "Selecciona una categoría";
+    if (!descripcionEvento) err.descripcion = "La descripción es obligatoria";
     return err;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const err = validar();
-    setErrores(err);
-    if (Object.keys(err).length > 0) {
-      Swal.fire({
-        icon: "error",
-        title: "Revisa los campos",
-        text: "Completa correctamente todos los campos.",
-      });
-      return;
-    }
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const err = validar();
+  setErrores(err);
+  if (Object.keys(err).length > 0) {
+    Swal.fire({
+      icon: "error",
+      title: "Revisa los campos",
+      text: "Completa correctamente todos los campos.",
+    });
+    return;
+  }
 
-    const formData = new FormData();
-    formData.append("NombreEvento", form.nombre);
-    formData.append("FechaEvento", form.fecha);
-    formData.append("LugarEvento", form.lugar);
-    formData.append("Aforo", form.aforo);
-    formData.append("CategoriaEventoId", form.categoria); 
-    formData.append("DescripcionEvento", form.descripcion);
-    formData.append("Imagen", form.imagenFile);
-    formData.append("EstadoEventoActivo", form.estado);
+  // Asegúrate de que categoriaSeleccionada es un número válido
+  const categoriaEventoId = parseInt(categoriaSeleccionada, 10);
+  if (isNaN(categoriaEventoId) || categoriaEventoId === 0) {
+    Swal.fire({
+      icon: "error",
+      title: "Categoría inválida",
+      text: "Selecciona una categoría válida.",
+    });
+    return;
+  }
 
-    try {
-      const response = await fetch("https://localhost:7143/api/Eventoes", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) throw new Error("Error al guardar el evento");
-
-      // Opcional: guardar también en localStorage
-      const eventosGuardados = JSON.parse(localStorage.getItem("eventos")) || [];
-      eventosGuardados.push({ ...form, imagenPreview });
-      localStorage.setItem("eventos", JSON.stringify(eventosGuardados));
-
-      Swal.fire({
-        icon: "success",
-        title: "Evento creado",
-        text: "El evento se ha creado correctamente.",
-      });
-
-      setForm({
-        nombre: "",
-        fecha: "",
-        lugar: "",
-        aforo: "",
-        categoria: "",
-        descripcion: "",
-        imagenFile: null,
-        estado: true,
-      });
-      setImagenPreview(null);
-      setErrores({});
-    } catch (error) {
-      console.error("Error creando evento:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error al crear evento",
-        text: error.message,
-      });
-    }
+  // Body plano, SIN eventoDto
+  const body = {
+    nombreEvento,
+    fechaEvento,
+    lugarEvento,
+    aforo: parseInt(aforo, 10),
+    categoriaEventoId,
+    descripcionEvento,
+    estadoEventoActivo,
   };
+
+  try {
+    const response = await fetch("https://localhost:7143/api/Eventoes/crear", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const mensaje = await response.text();
+    if (!response.ok) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: mensaje,
+      });
+    } else {
+      Swal.fire({
+        title: mensaje || 'Evento creado exitosamente',
+        icon: "success",
+        draggable: true
+      });
+      setNombreEvento("");
+      setFechaEvento("");
+      setLugarEvento("");
+      setAforo("");
+      setDescripcionEvento("");
+      setCategoriaSeleccionada("");
+      setEstadoEventoActivo(true);
+    }
+  } catch (error) {
+    console.log("Error al registrar: " + error);
+    Swal.fire({
+      icon: "error",
+      title: "Error de conexión",
+      text: "No se pudo conectar con el servidor.",
+    });
+  }
+};
 
   return (
     <div className="container mt-5">
       <Sidebar />
-
       <form
         onSubmit={handleSubmit}
         className="card p-4 shadow"
@@ -141,9 +127,8 @@ export default function CrearEvento() {
           <input
             type="text"
             className="form-control"
-            name="nombre"
-            value={form.nombre}
-            onChange={handleChange}
+            value={nombreEvento}
+            onChange={(e) => setNombreEvento(e.target.value)}
           />
           {errores.nombre && (
             <span className="text-danger">{errores.nombre}</span>
@@ -155,9 +140,8 @@ export default function CrearEvento() {
           <input
             type="date"
             className="form-control"
-            name="fecha"
-            value={form.fecha}
-            onChange={handleChange}
+            value={fechaEvento}
+            onChange={(e) => setFechaEvento(e.target.value)}
           />
           {errores.fecha && (
             <span className="text-danger">{errores.fecha}</span>
@@ -169,9 +153,8 @@ export default function CrearEvento() {
           <input
             type="text"
             className="form-control"
-            name="lugar"
-            value={form.lugar}
-            onChange={handleChange}
+            value={lugarEvento}
+            onChange={(e) => setLugarEvento(e.target.value)}
           />
           {errores.lugar && (
             <span className="text-danger">{errores.lugar}</span>
@@ -183,9 +166,8 @@ export default function CrearEvento() {
           <input
             type="number"
             className="form-control"
-            name="aforo"
-            value={form.aforo}
-            onChange={handleChange}
+            value={aforo}
+            onChange={(e) => setAforo(e.target.value)}
             min={1}
           />
           {errores.aforo && (
@@ -195,19 +177,18 @@ export default function CrearEvento() {
 
         <div className="mb-3">
           <label className="form-label">Categoría</label>
-          <select
-            className="form-select"
-            name="categoria"
-            value={form.categoria}
-            onChange={handleChange}
-          >
-            <option value="">Selecciona una categoría</option>
-            {categorias.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.nombre}
-              </option>
-            ))}
-          </select>
+         <select
+  className="form-select"
+  value={categoriaSeleccionada}
+  onChange={(e) => setCategoriaSeleccionada(e.target.value)}
+>
+  <option value="">Selecciona una categoría</option>
+  {categorias.map((cat) => (
+    <option key={cat.idCategoriaEvento} value={cat.idCategoriaEvento}>
+      {cat.nombre}
+    </option>
+  ))}
+</select>
           {errores.categoria && (
             <span className="text-danger">{errores.categoria}</span>
           )}
@@ -217,34 +198,12 @@ export default function CrearEvento() {
           <label className="form-label">Descripción</label>
           <textarea
             className="form-control"
-            name="descripcion"
-            value={form.descripcion}
-            onChange={handleChange}
+            value={descripcionEvento}
+            onChange={(e) => setDescripcionEvento(e.target.value)}
             rows={3}
           />
           {errores.descripcion && (
             <span className="text-danger">{errores.descripcion}</span>
-          )}
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Imagen</label>
-          <input
-            type="file"
-            className="form-control"
-            name="imagenFile"
-            accept="image/*"
-            onChange={handleChange}
-          />
-          {errores.imagenFile && (
-            <span className="text-danger">{errores.imagenFile}</span>
-          )}
-          {imagenPreview && (
-            <img
-              src={imagenPreview}
-              alt="Vista previa"
-              className="img-fluid mt-2 rounded shadow"
-            />
           )}
         </div>
 

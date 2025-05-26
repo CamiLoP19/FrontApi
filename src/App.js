@@ -12,6 +12,7 @@ import Footer from "./Components/footer/Footer";
 import CreacionEventos from "./Pages/CreacionEventos";
 import AdministrarEventos from "./Pages/AdministrarEventos";
 import CrearCategoria  from "./Pages/CrearCategoria"; 
+import CompraExitosa from "./Components/comprar/CompraExitosa";
 
 function App() {
   return (
@@ -24,7 +25,8 @@ function App() {
         <Route path="/postspage" element={<PostsPage />} />
         <Route path="/Inicio" element={<Inicio />} />
         <Route path="/comprar" element={<Comprar />} />
-        {/* Rutas para los formularios de inicio de sesión y registro */}
+        <Route path="/compra-exitosa" element={<CompraExitosa />} />
+         {/* Rutas para los formularios de inicio de sesión y registro */}
         <Route path="/login" element={<LoginForm />} />
         <Route path="/registro" element={<RegisterForm />} />
         <Route path="/contact" element={<Contact />} />

@@ -46,6 +46,7 @@ function LoginForm() {
         localStorage.setItem("nombreUsuario", data.user.nombreUsuario);
         localStorage.setItem("correo", data.user.correo);
         localStorage.setItem("rol", data.user.rol);
+        localStorage.setItem("personaId", data.user.personaId);
 
         Swal.fire({
           title: "Inicio de sesión exitoso",

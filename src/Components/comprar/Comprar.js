@@ -1,158 +1,174 @@
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Button, Form, Card, Container, Row, Col } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Button, Form, Card, Container, Row, Col, Alert } from 'react-bootstrap';
+
+// Precios fijos por tipo de boleto
+const PRECIOS_BOLETOS = {
+  comun: 1000,
+  preferencial: 2000,
+  vip: 4000
+};
 
 export default function Comprar() {
+  const navigate = useNavigate();
   const location = useLocation();
-  const evento = location.state?.evento;
-//intente esto en el navbar y no funciono
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const [evento, setEvento] = useState(location.state?.evento || null);
+  const [nombreComprador, setNombreComprador] = useState('');
+  const [tipoBoleto, setTipoBoleto] = useState('comun');
   const [cantidad, setCantidad] = useState(1);
-  const [tipoBoleto, setTipoBoleto] = useState('');
-  const [metodoPago, setMetodoPago] = useState('');
-  const [errores, setErrores] = useState({});
 
+  const userId = parseInt(localStorage.getItem('userId'));
   const token = localStorage.getItem('token');
-  const rol = localStorage.getItem('rol'); // Usa la misma clave que en login/navbar
-  const isLoggedIn = !!token;
-  const userRole = rol ? rol.toLowerCase() : null;
 
+  // Si no hay evento, intentar recuperarlo desde localStorage o fetch
+  useEffect(() => {
+    if (!evento) {
+      const storedEvento = localStorage.getItem('eventoSeleccionado');
+      if (storedEvento) {
+        setEvento(JSON.parse(storedEvento));
+      } else {
+        const searchParams = new URLSearchParams(location.search);
+        const eventoId = searchParams.get("eventoId");
+        if (eventoId) {
+          fetch(`https://localhost:7143/api/Eventoes/${eventoId}`)
+            .then(res => res.json())
+            .then(data => setEvento(data))
+            .catch(() => setError("No se pudo cargar la información del evento"));
+        }
+      }
+    } else {
+      localStorage.setItem('eventoSeleccionado', JSON.stringify(evento));
+    }
+  }, [evento, location.search]);
 
-  // Precios por tipo de boleto
-  const preciosBoleto = {
-    comun: evento?.precio || 0,
-    vip: (evento?.precio || 0) * 2, // VIP cuesta el doble
-    preferencial: (evento?.precio || 0) * 1.5,
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const tipoBoletoBackend = {
+        comun: 3,
+        preferencial: 2,
+        vip: 1
+      }[tipoBoleto];
+
+      const boletoData = {
+        NombreComprador: nombreComprador || "Anónimo",
+        TipoBoleto: tipoBoletoBackend,
+        Descripcion: `Entrada para ${evento.nombreEvento} (${tipoBoleto})`,
+        EstadoVenta: true,
+        EventoId: evento.eventoId,
+        PersonaId: userId
+      };
+
+      const response = await fetch('https://localhost:7143/api/Boletoes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(boletoData)
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || "Error al procesar la compra");
+      }
+
+      navigate('/compra-exitosa', {
+        state: {
+          boleto: await response.json(),
+          precioTotal: PRECIOS_BOLETOS[tipoBoleto] * cantidad
+        }
+      });
+
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleCantidadChange = (e) => setCantidad(e.target.value);
-  const handleTipoBoletoChange = (e) => setTipoBoleto(e.target.value);
-  const handleMetodoPagoChange = (e) => setMetodoPago(e.target.value);
-
-  const validarFormulario = () => {
-    const newErrors = {};
-
-    if (!cantidad || cantidad < 1 || !Number.isInteger(Number(cantidad))) {
-      newErrors.cantidad = 'Debe ingresar una cantidad válida (número entero mayor o igual a 1).';
-    }
-
-    if (!tipoBoleto) {
-      newErrors.tipoBoleto = 'Debe seleccionar un tipo de boleto.';
-    }
-
-    if (!metodoPago) {
-      newErrors.metodoPago = 'Debe seleccionar un método de pago.';
-    }
-
-    setErrores(newErrors);
-
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleComprar = () => {
-    if (!isLoggedIn) {
-      alert('Debes iniciar sesión para poder comprar.');
-      return;
-    }
-
-    if (userRole !== 'cliente') {
-      alert('Solo los usuarios con rol "cliente" pueden realizar compras.');
-      return;
-    }
-
-    if (!validarFormulario()) return;
-
-    alert(
-      `Compra realizada con éxito!\n
-      Tipo de boleto: ${tipoBoleto}\n
-      Cantidad: ${cantidad}\n
-      Precio total: $${(preciosBoleto[tipoBoleto] * cantidad).toFixed(2)}`
+  if (!evento) {
+    return (
+      <Container className="mt-5">
+        <Alert variant="danger">No se encontró información del evento</Alert>
+        <Button onClick={() => navigate('/')}>Volver al inicio</Button>
+      </Container>
     );
-  };
+  }
 
   return (
-    <Container className="mt-5">
-      <h1 className="mb-4 text-center">Compra de Entradas: {evento?.titulo}</h1>
+    <Container className="my-5">
+      <h2 className="mb-4">Comprar entradas para: {evento.nombreEvento}</h2>
 
-      <Card className="mb-4 shadow-sm">
+      <Card className="shadow">
         <Row className="g-0">
-          <Col md={5}>
+          <Col md={6}>
             <Card.Img
-              src={evento?.imagen}
-              alt={evento?.titulo}
+              src={evento.imagenUrl || evento.imagen || "https://placehold.co/600x400?text=Sin+Imagen"}
+              alt={evento.nombreEvento}
               style={{ height: '100%', objectFit: 'cover' }}
             />
           </Col>
 
-          <Col md={7}>
+          <Col md={6}>
             <Card.Body>
-              <Card.Title className="text-center">{evento?.titulo}</Card.Title>
-              <Card.Text><strong>Lugar:</strong> {evento?.lugar}</Card.Text>
-              <Card.Text>
-                <strong>Precio base:</strong> ${evento?.precio?.toFixed(2) || 'N/A'}
-              </Card.Text>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Nombre del comprador</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={nombreComprador}
+                    onChange={(e) => setNombreComprador(e.target.value)}
+                    placeholder="Ej: Juan Pérez"
+                  />
+                </Form.Group>
 
-              <Form>
-                <div className="mb-3">
-                  <Form.Label><strong>Cantidad de entradas</strong></Form.Label>
+                <Form.Group className="mb-3">
+                  <Form.Label>Tipo de entrada</Form.Label>
+                  <Form.Select
+                    value={tipoBoleto}
+                    onChange={(e) => setTipoBoleto(e.target.value)}
+                  >
+                    <option value="comun">General (${PRECIOS_BOLETOS.comun})</option>
+                    <option value="preferencial">Preferencial (${PRECIOS_BOLETOS.preferencial})</option>
+                    <option value="vip">VIP (${PRECIOS_BOLETOS.vip})</option>
+                  </Form.Select>
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Cantidad</Form.Label>
                   <Form.Control
                     type="number"
                     min="1"
                     value={cantidad}
-                    onChange={handleCantidadChange}
-                    className="shadow-sm"
-                    isInvalid={!!errores.cantidad}
+                    onChange={(e) => setCantidad(Math.max(1, parseInt(e.target.value) || 1))}
                   />
-                  <Form.Control.Feedback type="invalid">
-                    {errores.cantidad}
-                  </Form.Control.Feedback>
-                </div>
+                </Form.Group>
 
-                <div className="mb-3">
-                  <Form.Label><strong>Tipo de boleto</strong></Form.Label>
-                  <Form.Control
-                    as="select"
-                    value={tipoBoleto}
-                    onChange={handleTipoBoletoChange}
-                    className="shadow-sm"
-                    isInvalid={!!errores.tipoBoleto}
+                <div className="d-flex justify-content-between align-items-center mt-4">
+                  <div>
+                    <h4>Total: ${PRECIOS_BOLETOS[tipoBoleto] * cantidad}</h4>
+                  </div>
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    disabled={loading}
                   >
-                    <option value="">Seleccione tipo de boleto</option>
-                    <option value="comun">Común</option>
-                    <option value="vip">VIP</option>
-                    <option value="preferencial">Preferencial</option>
-                  </Form.Control>
-                  <Form.Control.Feedback type="invalid">
-                    {errores.tipoBoleto}
-                  </Form.Control.Feedback>
-                </div>
-
-                <div className="mb-3">
-                  <Form.Label><strong>Seleccionar método de pago</strong></Form.Label>
-                  <Form.Control
-                    as="select"
-                    value={metodoPago}
-                    onChange={handleMetodoPagoChange}
-                    className="shadow-sm"
-                    isInvalid={!!errores.metodoPago}
-                  >
-                    <option value="">Elija un método de pago</option>
-                    <option value="tarjeta">Tarjeta de crédito</option>
-                    <option value="paypal">PayPal</option>
-                    <option value="efectivo">Pago en efectivo</option>
-                  </Form.Control>
-                  <Form.Control.Feedback type="invalid">
-                    {errores.metodoPago}
-                  </Form.Control.Feedback>
-                </div>
-
-                <div className="d-flex justify-content-between mt-4">
-                  <Button variant="secondary" onClick={() => window.history.back()} className="px-4 py-2">
-                    Volver a inicio
-                  </Button>
-                  <Button onClick={handleComprar} className="btn btn-success px-4 py-2">
-                    Comprar Entradas
+                    {loading ? 'Procesando...' : 'Confirmar Compra'}
                   </Button>
                 </div>
+
+                {error && (
+                  <Alert variant="danger" className="mt-3">
+                    {error}
+                  </Alert>
+                )}
               </Form>
             </Card.Body>
           </Col>
@@ -161,5 +177,3 @@ export default function Comprar() {
     </Container>
   );
 }
-
-
